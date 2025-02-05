@@ -13,7 +13,10 @@
         class="users-table elevation-2"
       >
         <template v-slot:loading>
-          <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
+          <v-skeleton-loader
+            type="table-row-divider@10"
+          >
+          </v-skeleton-loader>
         </template>
 
         <template v-slot:item="{ item }">
@@ -45,7 +48,7 @@ import { computed, onMounted } from "vue";
 import { useUserStore } from '@/stores/userStore';
 import { shallowRef } from 'vue';
 import { type TableHeader, User } from '@/types/userTypes';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -65,19 +68,17 @@ const tableHeaders: TableHeader[] = [
 
 const handleRowClick = (user: User) => {
   console.log('Clicked user:', user);
-  router.push();
+  router.push({ name: 'userDetails', params: { id: user.id } });
 };
 
 onMounted( async () => {
-
-
   loading.value = true
-  // setTimeout(async () => {
-  //   await userStore.fetchUsers();
-  //   loading.value = false
-  // }, 2000)
-  await userStore.fetchUsers();
-  loading.value = false
+  setTimeout(async () => {
+    await userStore.fetchUsers();
+    loading.value = false
+  }, 2000)
+  // await userStore.fetchUsers();
+  // loading.value = false
 });
 
 </script>
