@@ -3,7 +3,7 @@ import TheWelcome from '../components/TheWelcome.vue'
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <v-container>
+    <v-btn color="primary">Click Me</v-btn>
+  </v-container>
 </template>
