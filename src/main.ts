@@ -1,4 +1,4 @@
-import './assets/main.css';
+import './assets/styles/main.scss';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
@@ -8,6 +8,7 @@ import router from './router';
 import { createVuetify } from 'vuetify';
 import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
+import './assets/styles/main.scss';
 
 const vuetify = createVuetify();
 
