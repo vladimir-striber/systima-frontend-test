@@ -10,7 +10,16 @@ import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
 import './assets/styles/main.scss';
 
-const vuetify = createVuetify();
+const vuetify = createVuetify({
+  theme: {
+    defaultTheme: 'dark',
+    themes: {
+      dark: {
+        dark: true,
+      },
+    },
+  },
+});
 
 const app = createApp(App);
 

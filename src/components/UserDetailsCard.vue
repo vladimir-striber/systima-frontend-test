@@ -2,17 +2,15 @@
   <v-row justify="center">
     <v-col cols="12" lg="8">
       <v-card
-        :variant="'tonal'"
-        class="mx-auto pa-4"
+        class="mx-auto pa-4 bg-grey-darken-4"
       >
         <v-card-item>
           <template v-if="isLoading">
             <v-skeleton-loader
-              class="mb-4"
+              class="mx-0 mb-4"
               type="text"
               height="42px"
               width="33%"
-              theme="dark"
             >
             </v-skeleton-loader>
 
@@ -20,16 +18,14 @@
               <v-skeleton-loader
                 type="text"
                 height="42px"
-                width="25%"
-                class="mb-1 mr-4"
-                theme="dark"
+                width="20%"
+                class="mb-1 mr-8"
               >
               </v-skeleton-loader>
               <v-skeleton-loader
                 type="text"
                 height="42px"
                 width="50%"
-                theme="dark"
               >
               </v-skeleton-loader>
             </div>
@@ -55,7 +51,6 @@
             </div>
           </template>
         </v-card-item>
-
       </v-card>
     </v-col>
   </v-row>
@@ -63,7 +58,7 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue';
-import type { User, ReducedUserDetails } from '@/types/userTypes.ts';
+import type { User, UserKeyValue } from '@/types/userTypes.ts'
 
 const props = defineProps({
   user: {
@@ -77,14 +72,16 @@ const props = defineProps({
   }
 });
 
-const reducedUserDetails = computed<ReducedUserDetails>(() => {
-  const { name, id, ...rest } = props.user;
-  return Object.entries(rest);
+const reducedUserDetails = computed<UserKeyValue[]>(() => {
+  const userCopy = { ...props.user };
+
+  delete userCopy.name;
+  delete userCopy.id;
+
+  return Object.entries(userCopy);
 })
 
-const detailValue = (key, value) => {
-  console.log(typeof key, key, value);
-
+const detailValue = (key: string, value: unknown): string => {
   if (key === 'address') {
     return `${value.street}, ${value.suite}, ${value.city}, ${value.zipcode}`;
   } else if (key === 'company') {
@@ -96,5 +93,9 @@ const detailValue = (key, value) => {
 </script>
 
 <style scoped lang="scss">
+
+:deep(.v-skeleton-loader__text) {
+  margin: 0 !important;
+}
 
 </style>

@@ -25,9 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, shallowRef } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useUserStore } from '@/stores/userStore.ts';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
 import AppButton from '@/components/shared/AppButton.vue';
 import AppIconButton from '@/components/shared/AppIconButton.vue';
 import UserDetailsCard from '@/components/UserDetailsCard.vue';
@@ -38,7 +38,7 @@ const router = useRouter();
 const route = useRoute();
 
 const screenType = ref<string>('');
-const isLoading = shallowRef<boolean>(false);
+const isLoading = ref<boolean>(false);
 const timeoutId = ref<ReturnType<typeof setTimeout> | null>(null);
 
 const user = computed<User>(() => {
@@ -49,16 +49,16 @@ const showSmallBackButton = computed<boolean>(() => {
   return screenType.value === 'mobile';
 });
 
-const routeId = computed<string>(() => {
+const routeId = computed<string | string[] | undefined>(() => {
   return route.params.id;
 })
 
-const handleGoBack = () => {
+const handleGoBack = (): void => {
   router.back();
   userStore.resetUser();
 }
 
-const updateScreenType = () => {
+const updateScreenType = (): void => {
   const windowWidth = window.innerWidth;
 
   if (windowWidth < 678) {
@@ -70,24 +70,22 @@ const updateScreenType = () => {
   }
 }
 
-const handleFetchSingleUser = () => {
+const handleFetchSingleUser = (): void => {
   isLoading.value = true;
-
-  console.log(isLoading.value, 'isLoading');
   /** I wanted to show the loading state, so I used setTimeout();
-   *  I wouldn't use this in a real life situation
+   *  I wouldn't use this in a real life situation;
    */
-  timeoutId.value = setTimeout( () => {
-    fetchSingleUser();
-    isLoading.value = false;
-  }, 2000)
+    timeoutId.value = setTimeout( () => {
+      fetchSingleUser();
+      isLoading.value = false;
+    }, 2000)
 }
 
-const fetchSingleUser = async () => {
+const fetchSingleUser = async (): Promise<void> => {
   await userStore.fetchSingleUser(routeId.value);
 }
 
-onMounted(async () => {
+onMounted(async (): void => {
   updateScreenType();
 
   if (routeId.value) {
@@ -97,7 +95,7 @@ onMounted(async () => {
   window.addEventListener('resize', updateScreenType);
 })
 
-onUnmounted(() => {
+onUnmounted((): void => {
   if (timeoutId.value) {
     clearTimeout(timeoutId.value);
   }

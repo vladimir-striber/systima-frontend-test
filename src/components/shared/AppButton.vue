@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 
-const props = defineProps({
+defineProps({
   buttonText: {
     type: String,
     default: ''

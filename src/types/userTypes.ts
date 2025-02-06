@@ -9,7 +9,10 @@ export interface User {
   company: UserCompany;
 }
 
-export type ReducedUserDetails = Omit<User, 'id', 'name'>;
+export type UserKeyValue = {
+  key: string;
+  value: unknown;
+};
 
 interface UserAddress {
   city: string;
@@ -30,11 +33,7 @@ interface UserCompany {
   name: string;
 }
 
-export interface UserResponse {
-  data: User[];
-}
-
 export interface TableHeader {
   value: string;
-  text: string
+  text: string;
 }

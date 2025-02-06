@@ -3,34 +3,35 @@
     <h1 class="mb-16 d-flex justify-center">
       <span>User List</span>
     </h1>
-    <v-card>
-      <UserListTable
-        :users="users"
-        :isLoading="isLoading"
-      />
-    </v-card>
+    <UserListTable
+      :users="users"
+      :isLoading="isLoading"
+      @goToUserDetails="handleGoToUserDetails"
+    />
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, shallowRef } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
+import { useRouter } from 'vue-router';
 import UserListTable from '@/components/UserListTable.vue';
 import type { User } from '@/types/userTypes.ts';
 
 const userStore = useUserStore();
+const router = useRouter();
 
-const isLoading = shallowRef<boolean>(false);
+const isLoading = ref<boolean>(false);
 const timeoutId = ref<ReturnType<typeof setTimeout> | null>(null);
 
 const users = computed<User[]>(() => {
   return userStore.users;
 })
 
-const handleFetchUsers = async () => {
+const handleFetchUsers = (): void => {
   isLoading.value = true;
   /** I wanted to show the loading state, so I used setTimeout();
-   *  I wouldn't use this in a real life situation
+   *  I wouldn't use this in a real life situation;
    */
   timeoutId.value = setTimeout( () => {
     fetchUsers();
@@ -38,15 +39,19 @@ const handleFetchUsers = async () => {
   }, 2000)
 }
 
-const fetchUsers = async () => {
+const fetchUsers = async (): Promise<void> => {
   await userStore.fetchUsers();
 }
 
-onMounted( () => {
+const handleGoToUserDetails = (userId: string): void => {
+  router.push({ name: 'userDetails', params: { id: userId } });
+}
+
+onMounted( (): void => {
   handleFetchUsers();
 });
 
-onUnmounted(() => {
+onUnmounted((): void => {
   if (timeoutId.value) {
     clearTimeout(timeoutId.value);
   }
