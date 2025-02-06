@@ -19,6 +19,7 @@
 
     <UserDetailsCard
       :user="user"
+      :isLoading="isLoading"
     />
   </v-container>
 </template>
@@ -71,6 +72,8 @@ const updateScreenType = () => {
 
 const handleFetchSingleUser = () => {
   isLoading.value = true;
+
+  console.log(isLoading.value, 'isLoading');
   /** I wanted to show the loading state, so I used setTimeout();
    *  I wouldn't use this in a real life situation
    */

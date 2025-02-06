@@ -9,7 +9,7 @@ export interface User {
   company: UserCompany;
 }
 
-export type UserWithoutName = Omit<User, 'name'>;
+export type ReducedUserDetails = Omit<User, 'id', 'name'>;
 
 interface UserAddress {
   city: string;
