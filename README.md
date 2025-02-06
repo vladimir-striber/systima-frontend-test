@@ -38,16 +38,16 @@ npm run lint
 
 ### Technologies
 
-TypeScript
+TypeScript - 
 The app uses TypeScript for type safety.
 
-Vue Router
+Vue Router - 
 The app uses Vue Router to handle navigation between different views.
 
-Pinia Store
+Pinia Store - 
 The app uses Pinia for centralized state management.
 
-Vuetify
+Vuetify - 
 The app uses Vuetify for UI components and responsive Design.
 
 ### Implementation
