@@ -28,5 +28,9 @@ export const useUserStore = defineStore('userStore', {
         console.error('Error fetching single user:', error);
       }
     },
+
+    resetUser() {
+      this.user = {};
+    }
   },
 });

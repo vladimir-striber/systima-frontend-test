@@ -16,6 +16,10 @@
       />
       <span class="user-details__title">User Details</span>
     </h1>
+
+    <UserDetailsCard
+      :user="user"
+    />
   </v-container>
 </template>
 
@@ -25,14 +29,20 @@ import { useUserStore } from '@/stores/userStore.ts';
 import { useRoute, useRouter } from 'vue-router';
 import AppButton from '@/components/shared/AppButton.vue';
 import AppIconButton from '@/components/shared/AppIconButton.vue';
+import UserDetailsCard from '@/components/UserDetailsCard.vue';
+import type { User } from '@/types/userTypes.ts';
 
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 
 const screenType = ref<string>('');
-const loading = shallowRef<boolean>(false);
+const isLoading = shallowRef<boolean>(false);
 const timeoutId = ref<ReturnType<typeof setTimeout> | null>(null);
+
+const user = computed<User>(() => {
+  return userStore.user;
+})
 
 const showSmallBackButton = computed<boolean>(() => {
   return screenType.value === 'mobile';
@@ -44,6 +54,7 @@ const routeId = computed<string>(() => {
 
 const handleGoBack = () => {
   router.back();
+  userStore.resetUser();
 }
 
 const updateScreenType = () => {
@@ -59,13 +70,13 @@ const updateScreenType = () => {
 }
 
 const handleFetchSingleUser = () => {
-  loading.value = true;
+  isLoading.value = true;
   /** I wanted to show the loading state, so I used setTimeout();
    *  I wouldn't use this in a real life situation
    */
   timeoutId.value = setTimeout( () => {
     fetchSingleUser();
-    loading.value = false;
+    isLoading.value = false;
   }, 2000)
 }
 
