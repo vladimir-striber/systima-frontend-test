@@ -20,17 +20,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, onMounted, onUnmounted, ref, shallowRef } from 'vue'
+import { useUserStore } from '@/stores/userStore.ts';
+import { useRoute, useRouter } from 'vue-router';
 import AppButton from '@/components/shared/AppButton.vue';
 import AppIconButton from '@/components/shared/AppIconButton.vue';
 
+const userStore = useUserStore();
 const router = useRouter();
+const route = useRoute();
 
-const screenType: String = ref('');
+const screenType = ref<string>('');
+const loading = shallowRef<boolean>(false);
+const timeoutId = ref<ReturnType<typeof setTimeout> | null>(null);
 
-const showSmallBackButton: Boolean = computed (() => {
+const showSmallBackButton = computed<boolean>(() => {
   return screenType.value === 'mobile';
+});
+
+const routeId = computed<string>(() => {
+  return route.params.id;
 })
 
 const handleGoBack = () => {
@@ -49,10 +58,37 @@ const updateScreenType = () => {
   }
 }
 
-onMounted(() => {
+const handleFetchSingleUser = () => {
+  loading.value = true;
+  /** I wanted to show the loading state, so I used setTimeout();
+   *  I wouldn't use this in a real life situation
+   */
+  timeoutId.value = setTimeout( () => {
+    fetchSingleUser();
+    loading.value = false;
+  }, 2000)
+}
+
+const fetchSingleUser = async () => {
+  await userStore.fetchSingleUser(routeId.value);
+}
+
+onMounted(async () => {
   updateScreenType();
 
+  if (routeId.value) {
+    handleFetchSingleUser();
+  }
+
   window.addEventListener('resize', updateScreenType);
+})
+
+onUnmounted(() => {
+  if (timeoutId.value) {
+    clearTimeout(timeoutId.value);
+  }
+
+  window.removeEventListener('resize', updateScreenType);
 })
 </script>
 

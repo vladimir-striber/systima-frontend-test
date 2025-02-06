@@ -3,6 +3,29 @@ export interface User {
   name: string;
   email: string;
   phone: string;
+  username: string;
+  website: string;
+  address: UserAddress;
+  company: UserCompany;
+}
+
+interface UserAddress {
+  city: string;
+  street: string;
+  suite: string;
+  zipcode: string;
+  get: UserAddressGeolocation;
+}
+
+interface UserAddressGeolocation {
+  lat: string;
+  lng: string;
+}
+
+interface UserCompany {
+  bs: string;
+  catchPhrase: string;
+  name: string;
 }
 
 export interface UserResponse {

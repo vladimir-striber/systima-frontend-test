@@ -44,16 +44,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, onUnmounted, ref, shallowRef } from 'vue'
 import { useUserStore } from '@/stores/userStore';
-import { shallowRef } from 'vue';
 import { type TableHeader, User } from '@/types/userTypes';
 import { useRouter } from 'vue-router';
 
 const userStore = useUserStore();
 const router = useRouter();
 
-const loading = shallowRef(false);
+const loading = shallowRef<boolean>(false);
+const timeoutId = ref<ReturnType<typeof setTimeout> | null>(null);
 
 const users = computed(() => {
   return userStore.users;
@@ -67,19 +67,33 @@ const tableHeaders: TableHeader[] = [
 ]
 
 const handleRowClick = (user: User) => {
-  console.log('Clicked user:', user);
   router.push({ name: 'userDetails', params: { id: user.id } });
 };
 
-onMounted( async () => {
-  loading.value = true
-  setTimeout(async () => {
-    await userStore.fetchUsers();
-    loading.value = false
+const handleFetchUsers = async () => {
+  loading.value = true;
+  /** I wanted to show the loading state, so I used setTimeout();
+   *  I wouldn't use this in a real life situation
+   */
+  timeoutId.value = setTimeout( () => {
+    fetchUsers();
+    loading.value = false;
   }, 2000)
-  // await userStore.fetchUsers();
-  // loading.value = false
+}
+
+const fetchUsers = async () => {
+  await userStore.fetchUsers();
+}
+
+onMounted( () => {
+  handleFetchUsers();
 });
+
+onUnmounted(() => {
+  if (timeoutId.value) {
+    clearTimeout(timeoutId.value);
+  }
+})
 
 </script>
 
